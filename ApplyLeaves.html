@@ -1,0 +1,147 @@
+  <h1 class="title">Leave Application Form</h1>
+<form name="myForm"   novalidate >
+
+            <table cellspacing="10" align="center" class="form-group"   width="40%" border="0" class="inlineTable" >
+
+                <tr  bgcolor="#e5e5e5" height="30" >
+                    <td colspan="2" align="left"style="font-weight: bold;">
+                        Please specify if you need
+                        <input type="checkbox" ng-true-value="3"  ng-model="req_doc" ng-required="myForm.req_doc"  >Regular
+                        <input type="checkbox" ng-true-value="1"  ng-model="req_doc" ng-required="myForm.req_doc" >Half day                        
+                        <input type="checkbox" ng-true-value="2"  ng-model="req_doc" ng-required="myForm.req_doc" >Floating                      
+                        <input type="checkbox" ng-true-value="4" ng-model="req_doc" ng-required="myForm.req_doc" >Sick 
+                <tr>
+                    <td>Employee Name:</td>
+                    <td>
+                        <input type="text" class="form-control" name="name" ng-model="name"   class="text-box">
+                        
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Designation:</td>
+                    <td>
+                        <input type="text" name="designation" class="form-control" ng-model="des" class="text-box">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Department:</td>
+                    <td>
+                        <input type="text" class="form-control" name="department" ng-model="dept" class="text-box">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>From Date:</td>
+                    <td>
+                       <input type="text" datepick="" class="form-control" name="Fromdate" ng-model="Fromdate" required />
+                      <span style="color:red" ng-show="myForm.Fromdate.$touched && myForm.Fromdate.$invalid">
+                      <span ng-show="myForm.Fromdate.$error.required">Required.</span>
+                      </span>
+                        
+                    </td>
+                </tr>
+
+                <tr ng-hide="req_doc == '1' || req_doc == '2'">
+                    <td>To Date:</td>
+                        <td>
+                            <input type="text" datepick="" class="form-control" name="todate" ng-model="todate" required />
+                           <span style="color:red" ng-show="myForm.todate.$touched && myForm.todate.$invalid">
+                              <span ng-show="myForm.todate.$error.required">Required.</span>
+                              </span>
+                            
+                </tr>
+
+                <tr ng-hide="req_doc == '1' || req_doc == '2'" >
+                    <td>
+                        No. of Days: </td>
+                        <td> 
+                            <input type="text" name="noday" class="form-control" readonly ng-model="difference"   ng-bind="{{dayDiff(formatdate, formatdate1)}}" value="{{dayDiff(formatdate, formatdate1)}}" >
+                        </td>
+                           
+                    </tr>  
+<!--                  diff: {{ dayDiff(formatdate, formatdate1) }} 
+ -->                        
+             
+              
+                </tr>
+                <tr  ng-show="req_doc == '1'">
+                     <td>Half Day:<br>No. of Days:</td>
+                            <td>
+                            <input type="radio"  class="radio-inline" value="First Half" ng-model="check" ng-required="myForm.req_doc" id="halfday" class="ng-pristine ng-valid ng-touched unchecked ">First Half
+                            <input type="radio" class="radio-inline" value="Second Half" ng-model="check" id="halfday" class="ng-pristine ng-valid ng-touched">Second Half<br>
+                            <input type="text"  ng-model="HalfD" class="form-control" readonly ng-value="0.5">
+                        </td>
+                                           
+
+                </tr>
+                <tr ng-show="req_doc == '2'">
+                            <td>No. of Days:</td>
+                            <td> <input type="text"  class="form-control" ng-model="FloatD" readonly ng-value="1.0"></td>
+                </tr>
+            
+                        <tr>
+                            <td>
+                                Reason:
+                            </td>
+                                
+                                <td>
+                                    <textarea name="Reason" class="form-control" ng-model="Reason"  cols="40" rows="4" id="leaveReason"></textarea>
+                                     <span style="color:red" ng-show="myForm.Reason.$error.require == true">Address cannot be empty</span>
+                                </td>
+                        </tr>
+
+                        <tr  bgcolor="#e5e5e5" hight="50">
+                            <td  align="center" colspan="2">
+                                <button type="button" class="btn btn-primary btn-xs" ng-model="Status" ng-value="Applied"   ng-click="Leaveapply()">Submit</button>
+                      <button type="reset"  Width="100px" value="Reset" class="btn btn-primary btn-xs">Reset</button> 
+                            </td>
+                        </tr>
+                        </tr>                                                                  
+
+
+    </table>
+   
+        <table  id="cssTable" action="" Method="" class="table table-striped"  cellspacing="4" align="right"  class="inlineTable" height="80%"  border="0">
+            <tr class="thick">
+                <td colspan="5" align="center">Applied/Approved Leave Details:</td>
+            </tr>
+                <tr>
+                    <th>
+                        S.No.</th>
+                    <th>
+                         User Name</th>
+                    <th>
+                        Designation</th>
+                    <th>
+                        Department</th>
+                    <th>
+                        Date</th>
+                    <th>
+                        Status</th>
+                </tr>
+<!-- ng-if="app.Segments[0].StartDate > now" -->
+                  
+                        <tr ng-repeat="detail in details | startFrom:currentPage*pageSize | limitTo:pageSize" class="odd" >
+
+                            <td>{{$index + 1}}</td>
+                            <td>{{detail.name}}</td>
+                            <td>{{detail.des}}</td>
+                            <td>{{detail.dept}}</td>
+                            <td>{{detail.Fromdate}}.</td>
+                            <td>{{detail.Status}}</td>
+
+                        </tr>
+                    
+            <div align="center">
+                        <button align="center" type="button" class="btn btn-primary btn-xs" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">Previous</button>
+
+                             {{currentPage+1}}/{{numberOfPages()}}
+
+                        <button align="center" type="button" class="btn btn-primary btn-xs" ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1">Next</button>
+            </div>           
+                   
+                
+        </table>
+</form>
